@@ -107,12 +107,12 @@ let currentCurrency = path.shift();
 let finalRate = null;
 for(let p of path){
   if(finalRate)
-    finalRate += (data[currentCurrency][p] * amount);
+    finalRate += data[currentCurrency][p];
   else
-    finalRate = (data[currentCurrency][p] * amount);
+    finalRate = data[currentCurrency][p];
   currentCurrency = p;
 }
-return finalRate;
+return finalRate * amount;
 }
 
 // Input Data
