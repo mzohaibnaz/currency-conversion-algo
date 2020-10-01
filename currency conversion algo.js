@@ -60,7 +60,7 @@ return finder;
 }
 
 // Compile all possible paths
-const compilePaths = (amount, current, target, currencies) => {
+const compilePaths = (current, target, currencies) => {
   checkedQueue.push(current);
   if(typeof currencies[current] !== "undefined"){
 
@@ -101,15 +101,15 @@ const compilePaths = (amount, current, target, currencies) => {
 }
 
 // Calculate rate based on given path
-const rateCalculator = (source) => {
+const rateCalculator = (amount, source) => {
 let path = [...source];
 let currentCurrency = path.shift();
 let finalRate = null;
 for(let p of path){
   if(finalRate)
-    finalRate *= data[currentCurrency][p];
+    finalRate += (data[currentCurrency][p] * amount);
   else
-    finalRate = data[currentCurrency][p];
+    finalRate = (data[currentCurrency][p] * amount);
   currentCurrency = p;
 }
 return finalRate;
@@ -118,17 +118,17 @@ return finalRate;
 // Input Data
 const currency = "USD";
 const target = "PKR";
-const amount = 10;
+const amount = 50;
 
 // Compile all possible path with dependency in depth
-const compiled = compilePaths(amount, currency, target, data);
+const compiled = compilePaths(currency, target, data);
 
 // output data
 const bestPath = compiled.shortest;
 const paths = compiled.paths;
 
 // calculate rate using shortest path
-const rate = rateCalculator(compiled.shortest);
+const rate = rateCalculator(amount, compiled.shortest);
 console.log("Using best path");
 console.log(`Rate from ${currency} > ${target} : ${rate}`);
 
